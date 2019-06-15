@@ -3,8 +3,9 @@ package com.spiders.spider;
 public class Users {
 
     private Integer id;
-    private String name;
-    private String role;
+    private String login;
+    private int role;
+    private String password;
 
     public Integer getId() {
         return id;
@@ -15,18 +16,26 @@ public class Users {
     }
 
     public String getName() {
-        return name;
+        return login;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.login = name;
     }
 
-    public String getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

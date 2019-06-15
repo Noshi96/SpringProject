@@ -92,7 +92,6 @@ public class UserServiceRestController {
         return userServiceDAO.getById(id);
     }
 
-
     /**
      * Metoda pozwala na znalezienie i pokazanie użytkownika o podanym w url imieniu.
      *      Wykorzystywana jest tutaj metoda sqlQuery(), która pozwala tworzyć zapytania SQL.
@@ -108,5 +107,22 @@ public class UserServiceRestController {
     @RequestMapping(value = "/getByName/{name}", method = RequestMethod.GET)
     public List<Users> getByName(@PathVariable String name){
         return userServiceDAO.sqlQuery(userServiceDAO.getByName(name));
+    }
+
+    /**
+     * Metoda pozwala na znalezienie i pokazanie użytkownika o podanym w url haśle.
+     *      Wykorzystywana jest tutaj metoda sqlQuery(), która pozwala tworzyć zapytania SQL.
+     *      Metoda getByPassword() tworzy zapytanie SQL o parametrze WHERE=password.
+     * Metoda : [GET]
+     * URL    : /getByPassword/{password}
+     * SQL    : SELECT
+     * Tabela : users
+     *
+     * @param password imię użytkownika podawane w adresie url.
+     * @return
+     */
+    @RequestMapping(value = "/getByPassword/{password}", method = RequestMethod.GET)
+    public List<Users> getByPassword(@PathVariable String password){
+        return userServiceDAO.sqlQuery(userServiceDAO.getByPassword(password));
     }
 }

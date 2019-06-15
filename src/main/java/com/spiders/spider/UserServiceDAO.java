@@ -27,8 +27,9 @@ public class UserServiceDAO {
         rows.stream().map((row)->{
             Users users = new Users();
             users.setId((Integer) row.get("id"));
-            users.setName((String) row.get("name"));
-            users.setRole((String) row.get("role"));
+            users.setName((String) row.get("login"));
+            users.setRole((int) row.get("role"));
+            users.setPassword((String) row.get("password"));
             return users;
         }).forEach((user)->{
 
@@ -39,18 +40,20 @@ public class UserServiceDAO {
 
     public void createUser(Users user) {
         jdbcTemplate.update((Connection connection)->{
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (name,role) VALUES (?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (login,role,password) VALUES (?,?,?)");
             preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getRole());
+            preparedStatement.setInt(2, user.getRole());
+            preparedStatement.setString(3, user.getPassword());
             return preparedStatement;
         });
     }
 
     public void updateUser(Users user, int id) {
         jdbcTemplate.update((Connection connection)->{
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET name=?, role=? WHERE id="+ id +"");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET login=?, role=?, password=? WHERE id="+ id +"");
             preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getRole());
+            preparedStatement.setInt(2, user.getRole());
+            preparedStatement.setString(3, user.getPassword());
             return preparedStatement;
         });
     }
@@ -70,8 +73,9 @@ public class UserServiceDAO {
         rows.stream().map((row)->{
             Users users = new Users();
             users.setId((Integer) row.get("id"));
-            users.setName((String) row.get("name"));
-            users.setRole((String) row.get("role"));
+            users.setName((String) row.get("login"));
+            users.setRole((int) row.get("role"));
+            users.setPassword((String) row.get("password"));
             return users;
         }).forEach((user)->{
 
@@ -87,8 +91,9 @@ public class UserServiceDAO {
         rows.stream().map((row)->{
             Users users = new Users();
             users.setId((Integer) row.get("id"));
-            users.setName((String) row.get("name"));
-            users.setRole((String) row.get("role"));
+            users.setName((String) row.get("login"));
+            users.setRole((int) row.get("role"));
+            users.setPassword((String) row.get("password"));
             return users;
         }).forEach((user)->{
 
@@ -97,8 +102,15 @@ public class UserServiceDAO {
         return userList;
     }
 
-    public String getByName(String name){
-        return "SELECT * FROM users WHERE name='"+ name +"'";
+    public String getByName(String login){
+        return "SELECT * FROM users WHERE login='"+ login +"'";
     }
+
+    public String getByPassword(String password){
+        return "SELECT * FROM users WHERE password='"+ password +"'";
+    }
+
+
+    //--------------------------------------------------------------------------------------------------------------------
 
 }
