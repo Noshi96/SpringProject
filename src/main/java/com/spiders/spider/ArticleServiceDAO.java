@@ -59,6 +59,13 @@ public class ArticleServiceDAO {
         });
     }
 
+    public void deleteArticle(int id) {
+        jdbcTemplateArticle.update((Connection connection)->{
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM article WHERE id="+ id +"");
+            return preparedStatement;
+        });
+    }
+
     public List<Article> getSearchedArticles(String title){
         List<Article> articleList = new ArrayList<>();
         String sql = "SELECT id, articleText, title, image FROM article WHERE title LIKE '" + title + "%'";

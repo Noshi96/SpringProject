@@ -88,5 +88,21 @@ public class ArticleServiceRestController {
         return "User updated successfully";
     }
 
+    /**
+     * Metoda pozwala na usunięcie podanego artykułu o podanym w parametrze url identyfikatorze.
+     * Metoda : [POST]
+     * URL    : /delArticle/{id}
+     * SQL    : DELETE
+     * Tabela : article
+     *
+     * @param id Identyfikator podawany w adresie url.
+     * @return Informację, że usunięto poprawnie artykuł.
+     */
+    @RequestMapping(value = "/delArticle/{id}", method = RequestMethod.POST)
+    public String addUser(@PathVariable int id){
+        articleServiceDAO.deleteArticle(id);
+        return "User deleted successfully";
+    }
+
 
 }
