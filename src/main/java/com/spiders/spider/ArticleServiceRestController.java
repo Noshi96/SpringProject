@@ -26,6 +26,21 @@ public class ArticleServiceRestController {
     }
 
     /**
+     * Metoda wyświetla listę wszsytkich artykułów w bazie z określonym limitem.
+     * Metoda : [GET]
+     * URL    : /articles
+     * SQL    : SELECT
+     * TABALA : article
+     *
+     * @param limit limit wyświetlanych rekordów
+     * @return
+     */
+    @RequestMapping(value="/articles", method=RequestMethod.GET)
+    public List<Article> getArticlesLimit(@PathVariable int limit){
+        return articleServiceDAO.getArticlesLimit(limit);
+    }
+
+    /**
      * Metoda pozwala na znalezienie i pokazanie artykułów o podanym w url tytule.
      * Metoda : [GET]
      * URL    : /searchedTitle/{title}
@@ -38,6 +53,22 @@ public class ArticleServiceRestController {
     @RequestMapping(value = "/searchedTitle/{title}", method = RequestMethod.GET)
     public List<Article> getSearched(@PathVariable String title){
         return articleServiceDAO.getSearchedArticles(title);
+    }
+
+    /**
+     * Metoda pozwala na znalezienie i pokazanie artykułów o podanym w url tytule oraz limicie wyświetlanych rekordw.
+     * Metoda : [GET]
+     * URL    : /searchedTitle/{title}
+     * SQL    : SELECT
+     * Tabela : article
+     *
+     * @param title title użytkownika podawane w adresie url.
+     * @param limit limit wyświetlanych rekordów
+     * @return
+     */
+    @RequestMapping(value = "/searchedTitle/{title}?limit={limit}", method = RequestMethod.GET)
+    public List<Article> getSearchedLimit(@PathVariable String title, int limit){
+        return articleServiceDAO.getSearchedArticlesLimit(title, limit);
     }
 
     /**

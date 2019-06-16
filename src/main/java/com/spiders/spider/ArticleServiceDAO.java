@@ -39,6 +39,25 @@ public class ArticleServiceDAO {
         return articleList;
     }
 
+    public List<Article> getArticlesLimit(int limit){
+        List<Article> articleList = new ArrayList<>();
+        String sql = "SELECT * FROM article ORDER BY id DESC LIMIT " + limit + "";
+        Collection<Map<String, Object>> rows = jdbcTemplateArticle.queryForList(sql);
+
+        rows.stream().map((row)->{
+            Article article = new Article();
+            article.setId((Integer) row.get("id"));
+            article.setArticleText((String) row.get("articleText"));
+            article.setTitle((String) row.get("title"));
+            article.setImage((String) row.get("image"));
+            return article;
+        }).forEach((article)->{
+
+            articleList.add(article);
+        });
+        return articleList;
+    }
+
     public void createArticle(Article article) {
         jdbcTemplateArticle.update((Connection connection)->{
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO article (articleText,title,image) VALUES (?,?,?)");
@@ -69,6 +88,24 @@ public class ArticleServiceDAO {
     public List<Article> getSearchedArticles(String title){
         List<Article> articleList = new ArrayList<>();
         String sql = "SELECT id, articleText, title, image FROM article WHERE title LIKE '" + title + "%'";
+        Collection<Map<String, Object>> rows = jdbcTemplateArticle.queryForList(sql);
+
+        rows.stream().map((row)->{
+            Article article = new Article();
+            article.setId((Integer) row.get("id"));
+            article.setArticleText((String) row.get("articleText"));
+            article.setTitle((String) row.get("title"));
+            article.setImage((String) row.get("image"));
+            return article;
+        }).forEach((article)->{
+            articleList.add(article);
+        });
+        return articleList;
+    }
+
+    public List<Article> getSearchedArticlesLimit(String title, int limit){
+        List<Article> articleList = new ArrayList<>();
+        String sql = "SELECT id, articleText, title, image FROM article WHERE title LIKE '" + title + "%' ORDER BY id DESC LIMIT " + limit + "";
         Collection<Map<String, Object>> rows = jdbcTemplateArticle.queryForList(sql);
 
         rows.stream().map((row)->{
