@@ -103,7 +103,7 @@ public class ArticleServiceDAO {
         return articleList;
     }
 
-    public List<Article> getSearchedArticlesLimit(String title, int limit){
+    public List<Article> getSearchedArticlesLimit(String title, Integer limit){
         List<Article> articleList = new ArrayList<>();
         String sql = "SELECT id, articleText, title, image FROM article WHERE title LIKE '" + title + "%' ORDER BY id DESC LIMIT " + limit + "";
         Collection<Map<String, Object>> rows = jdbcTemplateArticle.queryForList(sql);
