@@ -35,7 +35,7 @@ public class ArticleServiceRestController {
      * @param limit limit wyświetlanych rekordów
      * @return
      */
-    @RequestMapping(value="/articles", method=RequestMethod.GET)
+    @RequestMapping(value="/articles?limit={limit}", method=RequestMethod.GET)
     public List<Article> getArticlesLimit(@PathVariable int limit){
         return articleServiceDAO.getArticlesLimit(limit);
     }
