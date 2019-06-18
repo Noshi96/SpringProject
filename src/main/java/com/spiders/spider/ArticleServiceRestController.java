@@ -139,7 +139,6 @@ public class ArticleServiceRestController {
         return "User deleted successfully";
     }
 
-
     /**
      * Metoda wyświetla listę artykułów, które akurat przypadają na aktywną stronę.
      * Metoda : [GET]
@@ -147,13 +146,42 @@ public class ArticleServiceRestController {
      * SQL    : SELECT
      * TABALA : article
      *
-     * @return Informacja, że funkcja się wykonała
+     * @param siteActiveNumber Aktywna strona, na której się znajdujemy.
+     * @param limit Limit artykułów na strone
+     * @return
      */
-    @RequestMapping(value = "/articleShow/{siteNumber}/limit={limit}", method = RequestMethod.GET)
-    public String articleForSite(@PathVariable int siteActiveNumber, @PathVariable int limit){
-        articleServiceDAO.getArticlesForOneSite(siteActiveNumber, limit);
-        return "Correct";
+    @RequestMapping(value = "/articleShow/{siteActiveNumber}/limit={limit}", method = RequestMethod.GET)
+    public List<Article> articleForSite(@PathVariable int siteActiveNumber, @PathVariable int limit){
+        return articleServiceDAO.getArticlesForOneSite(siteActiveNumber, limit);
     }
 
+    /**
+     * Metoda zwraca ilość wszystkich artykułów.
+     * Metoda : [GET]
+     * URL    : /countedArticles
+     * SQL    : SELECT
+     * TABALA : article
+     *
+     * @return
+     */
+    @RequestMapping(value = "/countedArticles", method = RequestMethod.GET)
+    public List<String> getCountedArticles(){
+        return articleServiceDAO.counteArticles();
+    }
+
+    /**
+     * Metoda zwraca ilość wszystkich stron dla podanego limitu na jednej stronie.
+     * Metoda : [GET]
+     * URL    : /countedPages
+     * SQL    : SELECT
+     * TABALA : article
+     *
+     * @param limit Limit artykułów stronie
+     * @return
+     */
+    @RequestMapping(value = "/countedPages/limit={limit}", method = RequestMethod.GET)
+    public List<String> getCountedPages(@PathVariable int limit){
+        return articleServiceDAO.countPages(limit);
+    }
 
 }

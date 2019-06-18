@@ -18,8 +18,6 @@ public class ArticleServiceDAO {
     JdbcTemplate jdbcTemplateArticle;
 
 
-
-
     public List<Article> getArticles(){
         List<Article> articleList = new ArrayList<>();
         String sql = "SELECT * FROM article";
@@ -142,19 +140,17 @@ public class ArticleServiceDAO {
 
     public List<Article> getArticlesForOneSite(int siteActiveNumber, int limit){
         List<Article> articleList = new ArrayList<>();
-        String sqlCount = "SELECT count(*) FROM articles";
+        String sqlCount = "SELECT count(*) FROM article";
+
 
         int counted = jdbcTemplateArticle.queryForObject(sqlCount, Integer.class);
 
-        float helper = counted/limit;
-        int sitePages = (int)helper;
-        if (helper % 2 != 0){
-            sitePages++;
-        }
+        float helper = (float)counted/(float)limit;
+        int sitePages = (int)Math.ceil(helper); // Ilość potrzebnych stron do wyświetlenia danych
 
         int start = (siteActiveNumber * limit) - (limit - 1);
         int stop = siteActiveNumber * limit;
-        if(siteActiveNumber == sitePages){
+        if(siteActiveNumber == sitePages){  // W przypadku ostatniej strony
             stop = counted;
         }
 
@@ -174,6 +170,24 @@ public class ArticleServiceDAO {
             articleList.add(article);
         });
         return articleList;
+    }
+
+    public List<String> counteArticles(){
+        List<String> countedList = new ArrayList<>();
+        String sqlCount = "SELECT count(*) FROM article";
+        Integer counted = jdbcTemplateArticle.queryForObject(sqlCount, Integer.class);
+        countedList.add(counted.toString());
+        return countedList;
+    }
+
+    public List<String> countPages(int limit){
+        List<String> countedList = new ArrayList<>();
+        String sqlCount = "SELECT count(*) FROM article";
+        int counted = jdbcTemplateArticle.queryForObject(sqlCount, Integer.class);
+        float helper = (float)counted/(float)limit;
+        Integer sitePages = (int)Math.ceil(helper);
+        countedList.add(sitePages.toString());
+        return countedList;
     }
 
     //Funkcja zwracająca ile będzie stron
