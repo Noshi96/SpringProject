@@ -70,7 +70,7 @@ public class ArticleServiceRestController {
      * @return
      */
     @RequestMapping(value = "/searchedTitle/{title}/limit={limit}", method = RequestMethod.GET)
-    public List<Article> getSearchedLimit(@PathVariable String title, int limit){
+    public List<Article> getSearchedLimit(@PathVariable String title, @PathVariable int limit){
         return articleServiceDAO.getSearchedArticlesLimit(title, limit);
     }
 
