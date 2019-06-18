@@ -139,4 +139,42 @@ public class ArticleServiceDAO {
         });
         return articleList;
     }
+
+    public List<Article> getArticlesForOneSite(int siteActiveNumber, int limit){
+        List<Article> articleList = new ArrayList<>();
+        String sqlCount = "SELECT count(*) FROM articles";
+
+        int counted = jdbcTemplateArticle.queryForObject(sqlCount, Integer.class);
+
+        float helper = counted/limit;
+        int sitePages = (int)helper;
+        if (helper % 2 != 0){
+            sitePages++;
+        }
+
+        int start = (siteActiveNumber * limit) - (limit - 1);
+        int stop = siteActiveNumber * limit;
+        if(siteActiveNumber == sitePages){
+            stop = counted;
+        }
+
+        String sql = "SELECT * FROM article WHERE id BETWEEN " + start + " AND " + stop + "";
+
+        Collection<Map<String, Object>> rows = jdbcTemplateArticle.queryForList(sql);
+
+        rows.stream().map((row)->{
+            Article article = new Article();
+            article.setId((Integer) row.get("id"));
+            article.setArticleText((String) row.get("articleText"));
+            article.setTitle((String) row.get("title"));
+            article.setImage((String) row.get("image"));
+            return article;
+        }).forEach((article)->{
+
+            articleList.add(article);
+        });
+        return articleList;
+    }
+
+    //Funkcja zwracająca ile będzie stron
 }

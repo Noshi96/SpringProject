@@ -1,8 +1,11 @@
 package com.spiders.spider;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -28,7 +31,7 @@ public class ArticleServiceRestController {
     /**
      * Metoda wyświetla listę wszsytkich artykułów w bazie z określonym limitem.
      * Metoda : [GET]
-     * URL    : /articles/limit={limit}
+     * URL    : /articles?limit={limit}
      * SQL    : SELECT
      * TABALA : article
      *
@@ -58,7 +61,7 @@ public class ArticleServiceRestController {
     /**
      * Metoda pozwala na znalezienie i pokazanie artykułów o podanym w url tytule oraz limicie wyświetlanych rekordw.
      * Metoda : [GET]
-     * URL    : /searchedTitle/{title}/limit={limit}
+     * URL    : /searchedTitle/{title}?limit={limit}
      * SQL    : SELECT
      * Tabela : article
      *
@@ -67,7 +70,7 @@ public class ArticleServiceRestController {
      * @return
      */
     @RequestMapping(value = "/searchedTitle/{title}/limit={limit}", method = RequestMethod.GET)
-    public List<Article> getSearchedLimit(@PathVariable String title, @PathVariable Integer limit){
+    public List<Article> getSearchedLimit(@PathVariable String title, int limit){
         return articleServiceDAO.getSearchedArticlesLimit(title, limit);
     }
 
@@ -113,11 +116,12 @@ public class ArticleServiceRestController {
      * @param id Identyfikator podawany w adresie url.
      * @return Informację, że zaktualizowano poprawnie artykuł.
      */
-    @RequestMapping(value="/articles/{id}", method=RequestMethod.POST)
+    @RequestMapping(value="/articles1/{id}", method=RequestMethod.POST)
     public String updateArticle(@RequestBody Article article, @PathVariable int id){
         articleServiceDAO.updateArticle(article, id);
         return "User updated successfully";
     }
+
 
     /**
      * Metoda pozwala na usunięcie podanego artykułu o podanym w parametrze url identyfikatorze.
@@ -133,6 +137,22 @@ public class ArticleServiceRestController {
     public String addUser(@PathVariable int id){
         articleServiceDAO.deleteArticle(id);
         return "User deleted successfully";
+    }
+
+
+    /**
+     * Metoda wyświetla listę artykułów, które akurat przypadają na aktywną stronę.
+     * Metoda : [GET]
+     * URL    : /articleShow/{siteNumber}/limit={limit}
+     * SQL    : SELECT
+     * TABALA : article
+     *
+     * @return Informacja, że funkcja się wykonała
+     */
+    @RequestMapping(value = "/articleShow/{siteNumber}/limit={limit}", method = RequestMethod.GET)
+    public String articleForSite(@PathVariable int siteActiveNumber, @PathVariable int limit){
+        articleServiceDAO.getArticlesForOneSite(siteActiveNumber, limit);
+        return "Correct";
     }
 
 
