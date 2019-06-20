@@ -2,15 +2,24 @@ function getStart(){
     console.log('getStart');
     getStartArticle();
     var htmlData="";
+    if(sessionStorage.length == 0 ){
+        sessionStorage['role']= localStorage.getItem('role')
+        console.log("Test");
+        console.log(sessionStorage['role']);
+        console.log("Test");
+
+    }
     if (sessionStorage.length == 0 ){
-        htmlData = '<li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#logowanie">Logowanie</a>  </li> <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#rejestracja">Rejestracja</a>  </li> <li class="nav-item">      <a class="nav-link" href="javascript:getArticles()"  >Artykuły</a>    </li>';
+        htmlData = '<li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#logowanie">Logowanie</a>  </li> <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#rejestracja">Rejestracja</a>  </li> <li class="nav-item">      <a class="nav-link" href="javascript:getArticlespage(1,3)"  >Artykuły</a>    </li>';
     }
     else{
-        if (sessionStorage['role'] == 0 ){
-            htmlData = '<li> <a class="nav-link" href="javascript:getArticles()"  >Artykuły</a>    </li> <li> <a class="nav-link" data-toggle="modal" href="#newArticle">Dodaj Artykuł</a>    </li> <li><a class="nav-link" href="javascript:logout()"  >Wyloguj</a>    </li>';
+        if (sessionStorage['role'] == "admin" ){
+            htmlData = '<li> <a class="nav-link" href="javascript:getArticlespage(1,3)"  >Artykuły</a>    </li> <li> <a class="nav-link" data-toggle="modal" href="#newArticle">Dodaj Artykuł</a>    </li> <li><a class="nav-link" href="javascript:logout()"  >Wyloguj</a>    </li>';
         }
-        else{
-            htmlData = '<li> <a class="nav-link" href="javascript:getArticles()"  >Artykuły</a>    </li>  <li><a class="nav-link" href="javascript:logout()"  >Wyloguj</a>    </li>';
+        else if(sessionStorage['role'] == "user"){
+            htmlData = '<li> <a class="nav-link" href="javascript:getArticlespage(1,3)"  >Artykuły</a>    </li>  <li><a class="nav-link" href="javascript:logout()"  >Wyloguj</a>    </li>';
+        }else{
+            htmlData = '<li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#logowanie">Logowanie</a>  </li> <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#rejestracja">Rejestracja</a>  </li> <li class="nav-item">      <a class="nav-link" href="javascript:getArticlespage(1,3)"  >Artykuły</a>    </li>';
         }
     }
     $('#menu-option').html(htmlData);
@@ -27,13 +36,13 @@ function getStartArticle(){
             var temp="";
             $.each(result, function(index,value) {
                 data += `<div class="row ">
-                            <div class="col-3"><img class="d-block article-img" src="img/slide2.svg" alt="Second slide"></div><div class="col-9">
+                            <div class="col-3"><img class="d-block article-img" src="img/`+value.image+`.jpg" alt="Second slide"></div><div class="col-9">
                                 <div class="row"><a class="article-a" data-toggle="modal" href="#article-modal" onclick="showArticle(`+value.id+`)">
                                     <h1>`+value.title+`</h1></a>
                                 </div>
                                 <div class="row">`+value.articleText.substr(0, 400)+`...</div> `;
                                 if(sessionStorage.length > 0){
-                                    if(sessionStorage['role'] == 0){
+                                    if(sessionStorage['role'] == "admin"){
                                         data +=`<div class="row"><button type="button" class="btn btn-primary btn-article" data-toggle="modal" href="#editArticle" onclick="editArticle(`+value.id+`)" >Edytuj</button> `;
                                         data +=`<button type="button" class="btn btn-article bg-danger" style="margin-left:20px;color:white" onclick="deleteArticle(`+value.id+`)" >Usuń</button> </div>`;
                                     }
@@ -49,10 +58,10 @@ function getStartArticle(){
     });
 }
 
-function getArticles(){
-    console.log('getArticles');
+function getArticlespage(page,limit){
+    console.log('getArticlespage',page,limit);
     $.ajax({
-        url: "http://localhost:8080/articles",
+        url: "http://localhost:8080/articleShow/"+page+"/limit="+limit,
         dataType: "json",
         type: "get",
         success: function (result) {
@@ -60,13 +69,13 @@ function getArticles(){
             var temp="";
             $.each(result, function(index,value) {
                 data += `<div class="row ">
-                            <div class="col-3"><img class="d-block article-img" src="img/slide2.svg" alt="Second slide"></div><div class="col-9">
+                            <div class="col-3"><img class="d-block article-img" src="img/`+value.image+`.jpg" alt="Second slide"></div><div class="col-9">
                                 <div class="row"><a class="article-a" data-toggle="modal" href="#article-modal" onclick="showArticle(`+value.id+`)">
                                     <h1>`+value.title+`</h1></a>
                                 </div>
                                 <div class="row">`+value.articleText.substr(0, 400)+`...</div> `;
                                 if(sessionStorage.length > 0){
-                                    if(sessionStorage['role'] == 0){
+                                    if(sessionStorage['role'] == "admin"){
                                         data +=`<div class="row"><button type="button" class="btn btn-primary btn-article" data-toggle="modal" href="#editArticle" onclick="editArticle(`+value.id+`)" >Edytuj</button> `;
                                         data +=`<button type="button" class="btn btn-article bg-danger" style="margin-left:20px;color:white" onclick="deleteArticle(`+value.id+`)" >Usuń</button> </div>`;
                                     }
@@ -78,6 +87,24 @@ function getArticles(){
                            
             });
                 $('#main-article').html(data);
+                pagelist(limit);
+        }
+    });
+}
+
+function pagelist(limit){
+    console.log('pagelist',limit);
+    var data='<div class="row justify-content-md-center"><div class="col-auto"><div class="btn-group" role="group" aria-label="strony">';
+    $.ajax({
+        url: "http://localhost:8080/countedPages/limit="+limit,
+        dataType: "json",
+        type: "get",
+        success: function (result) {
+            for (var i=1;i<=result;i++){
+                data+= '<button type="button" class="btn btn-secondary" onclick="getArticlespage('+i+','+limit+')">'+i+'</button>'; 
+            }   
+            data+= '</div></div></div>';
+            $('#main-article').append(data);
         }
     });
 }
@@ -93,13 +120,13 @@ function searchArticles(){
             var temp="";
             $.each(result, function(index,value) {
                 data += `<div class="row ">
-                            <div class="col-3"><img class="d-block article-img" src="img/slide2.svg" alt="Second slide"></div><div class="col-9">
+                            <div class="col-3"><img class="d-block article-img" src="img/`+value.image+`.jpg" alt="Second slide"></div><div class="col-9">
                                 <div class="row"><a class="article-a" data-toggle="modal" href="#article-modal" onclick="showArticle(`+value.id+`)">
                                     <h1>`+value.title+`</h1></a>
                                 </div>
                                 <div class="row">`+value.articleText.substr(0, 400)+`...</div> `;
                                 if(sessionStorage.length > 0){
-                                    if(sessionStorage['role'] == 0){
+                                    if(sessionStorage['role'] == "admin"){
                                         data +=`<div class="row"><button type="button" class="btn btn-primary btn-article" data-toggle="modal" href="#editArticle" onclick="editArticle(`+value.id+`)" >Edytuj</button> `;
                                         data +=`<button type="button" class="btn btn-article bg-danger" style="margin-left:20px;color:white" onclick="deleteArticle(`+value.id+`)" >Usuń</button> </div>`;
                                     }
@@ -140,9 +167,10 @@ function login(){
 }
 function logout(){
     console.log('logout');
-    var htmlData = '<li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#logowanie">Logowanie</a>  </li> <li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#rejestracja">Rejestracja</a>  </li> <li class="nav-item">      <a class="nav-link" href="javascript:getArticles()"  >Artykuły</a>    </li>';
+    var htmlData = '<li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#logowanie">Logowanie</a>  </li> <li class="nav-item">    <a class="nav-link" data-toggle="modal" href="#rejestracja">Rejestracja</a>  </li> <li class="nav-item">      <a class="nav-link" href="javascript:getArticlespage(1,3)"  >Artykuły</a>    </li>';
     $('#menu-option').html(htmlData);
     sessionStorage.clear();
+    localStorage.clear();
     getStartArticle();
 }
 
@@ -183,7 +211,7 @@ function register(){
         
         $.ajax(settings).done(function (response) {
         console.log(response);
-        getArticles()
+        getStartArticle()
         });
     }
     else{
@@ -198,25 +226,21 @@ function validate(response,login,passowrd){
     var role = response.role;
     if (correct_login == login && correct_password == passowrd){
         makeSession(login,role);
-        var htmlData="";
-        if (role == 0 ){
-            var htmlData = '<li> <a class="nav-link" href="javascript:getArticles()"  >Artykuły</a>    </li> <li> <a class="nav-link" data-toggle="modal" href="#newArticle">Dodaj Artykuł</a>    </li> <li><a class="nav-link" href="javascript:logout()"  >Wyloguj</a>    </li>';
-        }
-        else{
-            var htmlData = '<li> <a class="nav-link" href="javascript:getArticles()"  >Artykuły</a>    </li>  <li><a class="nav-link" href="javascript:logout()"  >Wyloguj</a>    </li>';
-        }
-        $('#menu-option').html(htmlData);
-        getStartArticle();
+        getStart();
     }else{
         alert("Nieprawidłowe dane");
     }
 }
 
 function makeSession(login,role){
+    console.log("makeSession");
     sessionStorage['userLogin'] = login;
     sessionStorage['role']= role;
-    
+    localStorage.setItem('role',role);
 }
+
+
+
 function showArticle(id){
     console.log('showArticle');
     $.ajax({
@@ -237,7 +261,7 @@ function newArticle(){
     var title = $('#newTitleArticle').val();
     var text = $('#newTextArticle').val();
    
-    var data2Send ='{"articleText": "'+text+'","title":"'+title+'","image":"'+title+'"}';
+    var data2Send ='{"articleText": "'+text+'","title":"'+title+'","image":"default"}';
 
     var settings = {
         "async": true,
@@ -256,7 +280,7 @@ function newArticle(){
     
     $.ajax(settings).done(function (response) {
     console.log(response);
-    getArticles()
+    getArticlespage(1,3);
     });
 
 }
@@ -280,12 +304,12 @@ function sendEditArticle(){
     var title = $('#editTitleArticle').val();
     var text = $('#editTextArticle').val();
     var id =$('#article-id').val();
-    var data2Send ='{"articleText": "'+text+'","title":"'+title+'","image":"'+title+'"}';
+    var data2Send ='{"articleText": "'+text+'","title":"'+title+'"}';
 
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "http://localhost:8080/articles/"+id,
+        "url": "http://localhost:8080/articles1/"+id,
         "method": "POST",
         "headers": {
             "Content-Type": "application/json",
@@ -299,7 +323,7 @@ function sendEditArticle(){
     
     $.ajax(settings).done(function (response) {
     console.log(response);
-    getArticles()
+    getArticlespage(1,3);
     });
     
 }
@@ -324,7 +348,7 @@ function deleteArticle(id){
         
         $.ajax(settings).done(function (response) {
             console.log('usunieto');
-            getArticles();
+            getArticlespage(1,3);
         });
 
     }  
@@ -332,3 +356,4 @@ function deleteArticle(id){
         console.log("Nie");  
     }  
 }
+
