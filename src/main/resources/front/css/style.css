@@ -1,0 +1,44 @@
+.ht-500{
+    height: 500px !important;
+}
+
+.article-img{
+    width: 200px;
+    height: 200px;
+}
+hr.hr-down {
+	height: 10px;
+	border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
+    margin-top:1px;
+}
+
+hr.hr-up {
+	height: 10px;
+	border: 0;
+	box-shadow: 0 -10px 10px -10px #8c8b8b inset;
+}
+
+.logowanie{
+    display: block;
+    margin-top:5px;
+}
+.margin-logowanie{
+    margin-top:5px;
+    margin-left:47px;
+}
+textarea {
+    resize: none;
+  }
+
+.article-a{
+    color: #000;
+    text-decoration: none;
+}
+.article-a:hover{
+    color: #000;
+    text-decoration: none;
+}
+.btn-article{
+    margin-top:5px;
+}
