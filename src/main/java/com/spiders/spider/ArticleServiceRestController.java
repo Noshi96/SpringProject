@@ -120,7 +120,7 @@ public class ArticleServiceRestController {
     @RequestMapping(value="/articles1/{id}", method=RequestMethod.POST)
     public String updateArticle(@RequestBody Article article, @PathVariable int id){
         articleServiceDAO.updateArticle(article, id);
-        return "User updated successfully";
+        return "Article updated successfully";
     }
 
 

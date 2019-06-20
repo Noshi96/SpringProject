@@ -154,7 +154,10 @@ public class ArticleServiceDAO {
             stop = counted;
         }
 
-        String sql = "SELECT * FROM article WHERE id BETWEEN " + start + " AND " + stop + "";
+
+        int odKtoregoBrac = (siteActiveNumber*limit)-limit;
+
+        String sql = "SELECT * FROM database.article ORDER BY id ASC LIMIT "+odKtoregoBrac+","+limit+"";
 
         Collection<Map<String, Object>> rows = jdbcTemplateArticle.queryForList(sql);
 
