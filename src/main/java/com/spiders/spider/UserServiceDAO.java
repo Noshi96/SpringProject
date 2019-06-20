@@ -28,7 +28,7 @@ public class UserServiceDAO {
             Users users = new Users();
             users.setId((Integer) row.get("id"));
             users.setName((String) row.get("login"));
-            users.setRole((int) row.get("role"));
+            users.setRole((String) row.get("role"));
             users.setPassword((String) row.get("password"));
             return users;
         }).forEach((user)->{
@@ -42,7 +42,7 @@ public class UserServiceDAO {
         jdbcTemplate.update((Connection connection)->{
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (login,role,password) VALUES (?,?,?)");
             preparedStatement.setString(1, user.getName());
-            preparedStatement.setInt(2, user.getRole());
+            preparedStatement.setString(2, user.getRole());
             preparedStatement.setString(3, user.getPassword());
             return preparedStatement;
         });
@@ -52,7 +52,7 @@ public class UserServiceDAO {
         jdbcTemplate.update((Connection connection)->{
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET login=?, role=?, password=? WHERE id="+ id +"");
             preparedStatement.setString(1, user.getName());
-            preparedStatement.setInt(2, user.getRole());
+            preparedStatement.setString(2, user.getRole());
             preparedStatement.setString(3, user.getPassword());
             return preparedStatement;
         });
@@ -74,7 +74,7 @@ public class UserServiceDAO {
             Users users = new Users();
             users.setId((Integer) row.get("id"));
             users.setName((String) row.get("login"));
-            users.setRole((int) row.get("role"));
+            users.setRole((String) row.get("role"));
             users.setPassword((String) row.get("password"));
             return users;
         }).forEach((user)->{
@@ -92,7 +92,7 @@ public class UserServiceDAO {
             Users users = new Users();
             users.setId((Integer) row.get("id"));
             users.setName((String) row.get("login"));
-            users.setRole((int) row.get("role"));
+            users.setRole((String) row.get("role"));
             users.setPassword((String) row.get("password"));
             return users;
         }).forEach((user)->{

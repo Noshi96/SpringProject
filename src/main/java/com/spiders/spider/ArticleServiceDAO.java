@@ -68,10 +68,9 @@ public class ArticleServiceDAO {
 
     public void updateArticle(Article article, int id) {
         jdbcTemplateArticle.update((Connection connection)->{
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE article SET articleText=?, title=?, image=? WHERE id="+ id +"");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE article SET articleText=?, title=? WHERE id="+ id +"");
             preparedStatement.setString(1, article.getArticleText());
             preparedStatement.setString(2, article.getTitle());
-            preparedStatement.setString(3, article.getImage());
             return preparedStatement;
         });
     }

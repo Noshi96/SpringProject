@@ -4,7 +4,7 @@ public class Users {
 
     private Integer id;
     private String login;
-    private int role;
+    private String role;
     private String password;
 
     public Integer getId() {
@@ -23,11 +23,11 @@ public class Users {
         this.login = name;
     }
 
-    public int getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
