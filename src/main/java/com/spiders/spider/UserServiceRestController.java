@@ -19,10 +19,10 @@ public class UserServiceRestController {
      * Metoda wyświetla listę wszsytkich użytkowników w bazie.
      * Metoda : [GET]
      * URL    : /users
-     * SQL    : SELECT
-     * TABALA : users
+     * SQL    : SELECT      {"SELECT * FROM users"}
+     * TABELA : users
      *
-     * @return
+     * @return Listę wszsytkich użytkowników w bazie w formacie JSON.
      */
     @RequestMapping(value="/users", method=RequestMethod.GET)
     public List<Users> getUsers(){
@@ -33,14 +33,14 @@ public class UserServiceRestController {
      * Metoda pozwala na wprowadzenie nowego użytkownika.
      * Metoda : [POST]
      * URL    : /users
-     * SQL    : INSERT
-     * Tabela : users
+     * SQL    : INSERT      {"INSERT INTO users (login,role,password) VALUES (?,?,?);"}
+     * TABELA : users
      *
      * @param user Podany nowy użytkownik, który dostanie role oraz name.
      * @return Informację że dodano poprawnie użytkownika.
      */
-    @RequestMapping(value="/users", method=RequestMethod.POST) // zmien na POST
-    public String insertUser(@RequestBody Users user){//walidacja
+    @RequestMapping(value="/users", method=RequestMethod.POST)
+    public String insertUser(@RequestBody Users user){
         userServiceDAO.createUser(user);
         return "User created successfully";
     }
@@ -49,8 +49,8 @@ public class UserServiceRestController {
      * Metoda pozwala na aktualizację podanego użytkownika o podanym w parametrze url identyfikatorze.
      * Metoda : [POST]
      * URL    : /users/{id}
-     * SQL    : UPDATE
-     * Tabela : users
+     * SQL    : UPDATE      {"UPDATE users SET login=?, role=?, password=? WHERE id="+ id +";"}
+     * TABELA : users
      *
      * @param user Podany użytkownik, który będzie aktualizowany.
      * @param id Identyfikator podawany w adresie url.
@@ -66,8 +66,8 @@ public class UserServiceRestController {
      * Metoda pozwala na usunięcie podanego użytkownika o podanym w parametrze url identyfikatorze.
      * Metoda : [POST]
      * URL    : /delUser/{id}
-     * SQL    : DELETE
-     * Tabela : users
+     * SQL    : DELETE      {"DELETE FROM users WHERE id="+ id +";"}
+     * TABELA : users
      *
      * @param id Identyfikator podawany w adresie url.
      * @return Informację, że usunięto poprawnie użytkownika.
@@ -82,11 +82,11 @@ public class UserServiceRestController {
      * Metoda pozwala na znalezienie i pokazanie użytkownika o podanym w url identyfikatorze.
      * Metoda : [GET]
      * URL    : /getById/{id}
-     * SQL    : SELECT
-     * Tabela : users
+     * SQL    : SELECT      {"SELECT * FROM users WHERE id='"+ id +"';"}
+     * TABELA : users
      *
      * @param id Identyfikator podawany w adresie url.
-     * @return
+     * @return Pojedyńczy rekord o podanym ID jako lista w formacie JSON.
      */
     @RequestMapping(value = "/getById/{id}", method = RequestMethod.GET)
     public List<Users> getById(@PathVariable int id){
@@ -99,11 +99,11 @@ public class UserServiceRestController {
      *      Metoda getByName() tworzy zapytanie SQL o parametrze WHERE=name.
      * Metoda : [GET]
      * URL    : /getByName/{name}
-     * SQL    : SELECT
-     * Tabela : users
+     * SQL    : SELECT      {"SELECT * FROM users WHERE login='"+ login +"';"}
+     * TABELA : users
      *
      * @param name imię użytkownika podawane w adresie url.
-     * @return
+     * @return Lista z jednym użytkownikiem znalezionym po loginie w formacie JSON.
      */
     @RequestMapping(value = "/getByName/{name}", method = RequestMethod.GET)
     public List<Users> getByName(@PathVariable String name){
@@ -116,11 +116,11 @@ public class UserServiceRestController {
      *      Metoda getByPassword() tworzy zapytanie SQL o parametrze WHERE=password.
      * Metoda : [GET]
      * URL    : /getByPassword/{password}
-     * SQL    : SELECT
-     * Tabela : users
+     * SQL    : SELECT      {"SELECT * FROM users WHERE password='"+ password +"';"}
+     * TABELA : users
      *
      * @param password imię użytkownika podawane w adresie url.
-     * @return
+     * @return Lista z jednym użytkownikiem znalezionym po haśle w formacie JSON.
      */
     @RequestMapping(value = "/getByPassword/{password}", method = RequestMethod.GET)
     public List<Users> getByPassword(@PathVariable String password){
