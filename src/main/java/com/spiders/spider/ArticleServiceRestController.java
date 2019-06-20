@@ -9,6 +9,7 @@ import java.awt.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class ArticleServiceRestController {
 
     @Autowired
